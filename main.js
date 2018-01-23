@@ -4,12 +4,20 @@ requirejs([
 	'node_modules/vue/dist/vue.js',
 	'node_modules/vuex/dist/vuex.js',
 	'node_modules/vue-resource/dist/vue-resource.js',
-	'node_modules/vue-router/dist/vue-router.min.js'
-	], function(Vue, Vuex, VueResource, VueRouter) {
+	'node_modules/vue-router/dist/vue-router.min.js',
+	'node_modules/marked/lib/marked.js',
+	], function(Vue, Vuex, VueResource, VueRouter, marked) {
 
 	Vue.use(Vuex)
 	Vue.use(VueResource)
 	Vue.use(VueRouter)
+
+
+	// Url routing
+
+	var homeUrl = "/actus"
+
+
 
 	// Placeholders
 
@@ -114,7 +122,7 @@ requirejs([
 		props: ['text', 'url', 'children', ],
 		template: `
 			<a
-				:href="children ? '#' : url"
+				:href="children ? '#' : '#/'+url"
 				:data-toggle="children ? 'dropdown' : ''"
 				:class="{
 					'nav-link': true,
@@ -132,7 +140,7 @@ requirejs([
 			<nav>
 				<nav-text-link
 					:text="'Accueil'"
-					:url="'/'"
+					:url="'#' + homeUrl"
 					></nav-text-link>
 				<template v-for="page in state.pages" v-if="page.fields.displayArea=='Barre de navigation'">
 					<nav-text-link
@@ -155,6 +163,7 @@ requirejs([
 		`,
 		computed: {
 			state () { return this.$store.state },
+			homeUrl() { return homeUrl },
 		}
 	})
 
@@ -179,18 +188,29 @@ requirejs([
 
 	var Page = {
 		template: `
-			<section>
-				<h1>Tis a page !</h1>
+			<section class="text">
+				<div class="container" v-for="page in state.pages" v-if="page.fields.url==$route.params.page_slug">
+					<h1>{{ page.fields.title }}</h1>
+					<div v-html="marked(page.fields.content)"></div>
+				</div>
 			</section>
-		`
+		`,
+		computed: {
+			state () { return this.$store.state },
+			marked() { return marked },
+		}
 	}
 
+
 	var routes = [
-		{ path: '', redirect: '/actus'},
-		{ path: '/actus', component: Actus },
-		{ path: '/page', component: Page },
+		{ path: '', redirect: homeUrl},
+		{ path: homeUrl, component: Actus },
+		{ path: '/:page_slug', component: Page },
 	]
 	var router = new VueRouter({ routes })
+
+
+
 
 	// App
 	var app = new Vue({
