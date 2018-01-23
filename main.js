@@ -3,11 +3,13 @@ requirejs.config({ nodeRequire: require });
 requirejs([
 	'node_modules/vue/dist/vue.js',
 	'node_modules/vuex/dist/vuex.js',
-	'node_modules/vue-resource/dist/vue-resource.js'
-	], function(Vue, Vuex, VueResource) {
+	'node_modules/vue-resource/dist/vue-resource.js',
+	'node_modules/vue-router/dist/vue-router.min.js'
+	], function(Vue, Vuex, VueResource, VueRouter) {
 
 	Vue.use(Vuex)
 	Vue.use(VueResource)
+	Vue.use(VueRouter)
 
 	// Placeholders
 
@@ -30,24 +32,7 @@ requirejs([
 			},
 			'articles': placeholders.articles,
 			'pages': [],
-			'links': [],
-			'presentation': [
-				{
-					'title': "Notre équipe",
-					'thumbnail': "http://www.publicdomainpictures.net/pictures/140000/velka/rainbow-1445337690d8q.jpg",
-					'link': "#"
-				},
-				{
-					'title': "Nos actions et évènements",
-					'thumbnail': "http://www.publicdomainpictures.net/pictures/140000/velka/rainbow-1445337690d8q.jpg",
-					'link': "#"
-				},
-				{
-					'title': "Nos valeurs et notre histoire",
-					'thumbnail': "http://www.publicdomainpictures.net/pictures/140000/velka/rainbow-1445337690d8q.jpg",
-					'link': "#"
-				}
-			]
+			'links': []
 		},
 		mutations: {
 			updateData(state, payload) {
@@ -104,7 +89,7 @@ requirejs([
 	})
 
 	Vue.component('nav-icon-link', {
-		props: ['title', 'icon', 'url', 'children', 'emphasize'],
+		props: ['title', 'icon', 'url', 'children', ],
 		template: `
 			<a
 				:title="title"
@@ -113,7 +98,6 @@ requirejs([
 				:class="{
 					'nav-link': true,
 					'nav-icon-link': true,
-					'nav-link--emphasize': emphasize,
 					'dropdown-toggle': children
 					}"
 				target="_blank"
@@ -127,7 +111,7 @@ requirejs([
 	})
 
 	Vue.component('nav-text-link', {
-		props: ['text', 'url', 'children', 'emphasize'],
+		props: ['text', 'url', 'children', ],
 		template: `
 			<a
 				:href="children ? '#' : url"
@@ -135,7 +119,6 @@ requirejs([
 				:class="{
 					'nav-link': true,
 					'nav-text-link': true,
-					'nav-link--emphasize': emphasize,
 					'dropdown-toggle': children
 					}"
 				>{{ text }}
@@ -147,6 +130,16 @@ requirejs([
 		props: ['menu'],
 		template: `
 			<nav>
+				<nav-text-link
+					:text="'Accueil'"
+					:url="'/'"
+					></nav-text-link>
+				<template v-for="page in state.pages" v-if="page.fields.displayArea=='Barre de navigation'">
+					<nav-text-link
+						:text="page.fields.title"
+						:url="page.fields.url"
+						></nav-text-link>
+				</template>
 				<template v-for="link in state.links" v-if="link.fields.displayArea=='Barre de navigation'">
 					<nav-icon-link v-if="link.fields.icon"
 						:title="link.fields.text"
