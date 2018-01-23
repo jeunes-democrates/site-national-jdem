@@ -155,15 +155,48 @@ requirejs([
 		`,
 		computed: {
 			state () { return this.$store.state },
-			placeholders() { return placeholders },
 		}
 	})
 
+	var Actus = {
+		template: `
+			<section>
+				<article-block
+					:articles="state.articles"
+					:title="'Nos idées & actualités'"
+					:slug="'actus'"
+					:url="'https://medium.com/133b'"
+					class="container"
+					:class="{ loading: (state.articles==placeholders.articles) }"
+					></article-block>
+			</section>
+		`,
+		computed: {
+			state () { return this.$store.state },
+			placeholders() { return placeholders },
+		}
+	}
+
+	var Page = {
+		template: `
+			<section>
+				<h1>Tis a page !</h1>
+			</section>
+		`
+	}
+
+	var routes = [
+		{ path: '', redirect: '/actus'},
+		{ path: '/actus', component: Actus },
+		{ path: '/page', component: Page },
+	]
+	var router = new VueRouter({ routes })
 
 	// App
 	var app = new Vue({
 		el: '#app',
 		store,
+		router,
 		template: `
 
 			<div id="app" lang="fr">
@@ -196,16 +229,7 @@ requirejs([
 					</div>
 				</header>
 
-				<section>
-					<article-block
-						:articles="state.articles"
-						:title="'Nos idées & actualités'"
-						:slug="'actus'"
-						:url="'https://medium.com/133b'"
-						class="container"
-						:class="{ loading: (state.articles==placeholders.articles) }"
-						></article-block>
-				</section>
+				<router-view></router-view>
 
 				<footer>
 					<div class="container text-muted text-center small">
@@ -228,7 +252,6 @@ requirejs([
 		`,
 		computed: {
 			state () { return this.$store.state },
-			placeholders() { return placeholders },
 		}
 	})
 
