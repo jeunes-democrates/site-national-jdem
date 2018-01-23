@@ -15,7 +15,7 @@ requirejs([
 
 	// Url routing
 
-	var homeUrl = "/actus"
+	var homeUrl = "actus"
 
 
 
@@ -140,7 +140,7 @@ requirejs([
 			<nav>
 				<nav-text-link
 					:text="'Accueil'"
-					:url="'#' + homeUrl"
+					:url="homeUrl"
 					></nav-text-link>
 				<template v-for="page in state.pages" v-if="page.fields.displayArea=='Barre de navigation'">
 					<nav-text-link
@@ -204,7 +204,7 @@ requirejs([
 
 	var routes = [
 		{ path: '', redirect: homeUrl},
-		{ path: homeUrl, component: Actus },
+		{ path: '/'+homeUrl, component: Actus },
 		{ path: '/:page_slug', component: Page },
 	]
 	var router = new VueRouter({ routes })
@@ -231,12 +231,12 @@ requirejs([
 									</h1>
 								</div>
 								<div class="col-md-6 col-lg-5 offset-lg-1 header-item email-wrapper">
-									<h2>Rejoins-nous !</h2>
+									<h3>Rejoins-nous !</h3>
 									<form>
 										<div class="input-group">
-											<input type="email" placeholder="mon@adresse.mail" class="form-control form-control-lg">
+											<input type="email" placeholder="mon@adresse.mail" class="form-control">
 											<div class="input-group-append">
-												<button type="submit" class="btn btn-lg btn-primary email-submit"><i class="fa fa-chevron-right"></i></button>
+												<button type="submit" class="btn btn-primary email-submit"><i class="fa fa-chevron-right"></i></button>
 											</div>
 										</div>
 									</form>
