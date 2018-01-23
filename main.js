@@ -232,9 +232,9 @@ requirejs([
 								</div>
 								<div class="col-md-6 col-lg-5 offset-lg-1 header-item email-wrapper">
 									<h3>Rejoins-nous !</h3>
-									<form>
+									<form id="signup_form" @submit.prevent="signup()">
 										<div class="input-group">
-											<input type="email" placeholder="mon@adresse.mail" class="form-control">
+											<input type="email" name="signup_email" placeholder="mon@adresse.mail" class="form-control">
 											<div class="input-group-append">
 												<button type="submit" class="btn btn-primary email-submit"><i class="fa fa-chevron-right"></i></button>
 											</div>
@@ -272,6 +272,13 @@ requirejs([
 		`,
 		computed: {
 			state () { return this.$store.state },
+		},
+		methods: {
+			signup: function() {
+				var $form = document.querySelector('#signup_form')
+				var url = 'https://script.google.com/macros/s/AKfycbxKYWiaZmK0eL6OrBxaIhRxkv0NMivPMVralfvWEK1IvdgaIKK4/exec'
+				this.$http.post(url, JSON.stringify()).then(console.log('Sent!'))
+			}
 		}
 	})
 
