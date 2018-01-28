@@ -286,6 +286,7 @@ requirejs([
 		},
 		methods: {
 			signup: function() {
+				alert("Antonin dit : pour l'instant le module d'inscription n'est pas fonctionnel, c'est pour bientôt :p")
 				var $form = document.querySelector('#signup_form')
 				var url = 'https://script.google.com/macros/s/AKfycbxKYWiaZmK0eL6OrBxaIhRxkv0NMivPMVralfvWEK1IvdgaIKK4/exec'
 				this.$http.post(url, JSON.stringify()).then(console.log('Sent!'))
