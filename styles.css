@@ -124,6 +124,7 @@ p a:active:not(.btn) { filter: brightness(150%); }
 	box-shadow: 0 0 5px 5px rgba(0,0,0,.25);
 }
 
+.btn-primary:focus { box-shadow: 0 0 5px 5px rgba(0,0,0,.25); }
 
 
 /* Rotations */
@@ -271,9 +272,27 @@ blockquote::after {
 	background-color: var(--complementary-color);
 }
 
-h1:not(:first-child),
-h2:not(:first-child),
-h3:not(:first-child),
-h4:not(:first-child),
-h5:not(:first-child),
-h6:not(:first-child) { margin-top: 2em; }
+/* By default, headings have a large top margin*/
+h1, h2, h3, h4, h5, h6 { margin-top: 2em; }
+
+/* But not if they are the first item in the text */
+h1:first-child, h2:first-child, h3:first-child, h4:first-child, h5:first-child, h6:first-child { margin-top: 0; }
+
+/* Nor when they come right after another heading */
+h1 + h2, h2 + h3, h3 + h4, h4 + h5, h5 + h6 { margin-top: 1em; }
+
+.text h3::before { content: counter(h3-counter)'.'; counter-increment: h3-counter; padding-right: .25em; }
+.text h2 { counter-reset: h3-counter; }
+
+.text .image-caption {
+	font-size: .8em;
+	opacity: .8;
+	margin-top: -.5rem;
+	margin-bottom: 2rem;
+	font-style: italic;
+	text-align: center;
+}
+
+.text img { border: 1px solid rgba(0,0,0,.1); }
+
+.end-of-page p { text-align: center; opacity: .8; }

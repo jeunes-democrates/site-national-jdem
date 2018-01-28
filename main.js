@@ -192,6 +192,14 @@ requirejs([
 				<div class="container" v-for="page in state.pages" v-if="page.fields.url==$route.params.page_slug">
 					<h1>{{ page.fields.title }}</h1>
 					<div v-html="marked(page.fields.content)"></div>
+					<div class="end-of-page">
+						<p>
+							<a class="back-to-home btn btn-secondary" href="/#/actus">
+								<i class="fa fa-undo"></i>
+								Retour à l'accueil
+							</a>
+						</p>
+					</div>
 				</div>
 			</section>
 		`,
@@ -207,7 +215,10 @@ requirejs([
 		{ path: '/'+homeUrl, component: Actus },
 		{ path: '/:page_slug', component: Page },
 	]
-	var router = new VueRouter({ routes })
+	var router = new VueRouter({
+		routes,
+		scrollBehavior (to, from, savedPosition) { return { x: 0, y: 0 } }
+	})
 
 
 
@@ -255,12 +266,12 @@ requirejs([
 					<div class="container text-muted text-center small">
 						<p>
 							<template v-for="page in state.pages" v-if="page.fields.displayArea=='Pied de page'">
-								<a href="#">{{ page.fields.title }}</a><span class="link-divider"> · </span>
+								<a :href="'#/'+page.fields.url">{{ page.fields.title }}</a><span class="link-divider"> · </span>
 							</template>
 						</p>
 						<p>
 							<template v-for="link in state.links" v-if="link.fields.displayArea=='Pied de page'">
-								<a href="#">{{ link.fields.text }}</a><span class="link-divider"> · </span>
+								<a :href="link.fields.url">{{ link.fields.text }}</a><span class="link-divider"> · </span>
 							</template>
 						</p>
 						<p>Les Jeunes Démocrates, tous droits réservés.</p>
