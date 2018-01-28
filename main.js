@@ -169,16 +169,17 @@ requirejs([
 
 	var Actus = {
 		template: `
-			<section>
-				<article-block
-					:articles="state.articles"
-					:title="'Nos idées & actualités'"
-					:slug="'actus'"
-					:url="'https://medium.com/133b'"
-					class="container"
-					:class="{ loading: (state.articles==placeholders.articles) }"
-					></article-block>
-			</section>
+				<section>
+					<article-block
+						:articles="state.articles"
+						:title="'Nos idées & actualités'"
+						:slug="'actus'"
+						:url="'https://medium.com/133b'"
+						class="container"
+						:class="{ loading: (state.articles==placeholders.articles) }"
+						></article-block>
+				</section>
+			</transition>
 		`,
 		computed: {
 			state () { return this.$store.state },
@@ -189,18 +190,20 @@ requirejs([
 	var Page = {
 		template: `
 			<section class="text">
-				<div class="container" v-for="page in state.pages" v-if="page.fields.url==$route.params.page_slug">
-					<h1>{{ page.fields.title }}</h1>
-					<div v-html="marked(page.fields.content)"></div>
-					<div class="end-of-page">
-						<p>
-							<a class="back-to-home btn btn-secondary" href="/#/actus">
-								<i class="fa fa-undo"></i>
-								Retour à l'accueil
-							</a>
-						</p>
+				<transition name="fade">
+					<div class="container" v-for="page in state.pages" v-if="page.fields.url==$route.params.page_slug" :key="page.sys.id">
+						<h1>{{ page.fields.title }}</h1>
+						<div v-html="marked(page.fields.content)"></div>
+						<div class="end-of-page">
+							<p>
+								<a class="back-to-home btn btn-secondary" href="/#/actus">
+									<i class="fa fa-undo"></i>
+									Retour à l'accueil
+								</a>
+							</p>
+						</div>
 					</div>
-				</div>
+				</transition>
 			</section>
 		`,
 		computed: {
@@ -260,7 +263,9 @@ requirejs([
 					</div>
 				</header>
 
-				<router-view></router-view>
+				<transition name="fade">
+					<router-view></router-view>
+				</transition>
 
 				<footer>
 					<div class="container text-muted text-center small">
