@@ -36,8 +36,10 @@
 <link rel="stylesheet" href="node_modules/font-awesome/css/font-awesome.min.css">
 
 <!-- smooch.io chat widget -->
-<script src="https://cdn.smooch.io/smooch.min.js"></script>
+<script async onload="initializeSmooch()" src="https://cdn.smooch.io/smooch.min.js"></script>
+
 <script>
+function initializeSmooch() {
 	Smooch.init({
 		appToken: '9bgqx6aphfnffbbxzvygax7a6',
 		customText: {
@@ -46,7 +48,9 @@
 			inputPlaceholder: 'Écrire un message...',
 			sendButtonText: 'Envoyer',
 		}
-	});
+	});	
+}
+
 </script>
 
 </html>

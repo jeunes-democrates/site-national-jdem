@@ -6,7 +6,12 @@ requirejs([
 	'node_modules/vue-resource/dist/vue-resource.js',
 	'node_modules/vue-router/dist/vue-router.min.js',
 	'node_modules/marked/lib/marked.js',
-	], function(Vue, Vuex, VueResource, VueRouter, marked) {
+	'node_modules/airtable/build/airtable.browser.js',
+	], function(Vue, Vuex, VueResource, VueRouter, marked, Airtable) {
+
+	console.log(Vue)
+	console.log(marked)
+	console.log(Airtable)
 
 	Vue.use(Vuex)
 	Vue.use(VueResource)
@@ -16,8 +21,6 @@ requirejs([
 	// Url routing
 
 	var homeUrl = "actus"
-
-
 
 	// Placeholders
 
@@ -291,10 +294,10 @@ requirejs([
 		},
 		methods: {
 			signup: function() {
-				alert("Antonin dit : pour l'instant le module d'inscription n'est pas fonctionnel, c'est pour bientôt :p")
 				var $form = document.querySelector('#signup_form')
+				console.log(JSON.stringify($form))
 				var url = 'https://script.google.com/macros/s/AKfycbxKYWiaZmK0eL6OrBxaIhRxkv0NMivPMVralfvWEK1IvdgaIKK4/exec'
-				this.$http.post(url, JSON.stringify()).then(console.log('Sent!'))
+				this.$http.post(url, JSON.stringify($form)).then(console.log('Sent!'))
 			}
 		}
 	})
@@ -331,5 +334,13 @@ requirejs([
 		store.commit('updateData', {'links': response.body.items})
 	})
 
+	var base = new Airtable({apiKey: 'keywLosZM2uL7iCRC'}).base('app2vJwzO7duiq30k');
+
+	base('Inscriptions').create({
+		"Email": "testing@tester.com",
+	}, function(err, record) {
+		if (err) { console.error(err); return; }
+		console.log(record.getId());
+	});
 
 })
