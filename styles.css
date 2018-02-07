@@ -258,8 +258,8 @@ h2 { font-size: 1.6rem; }
 @media (min-width: 576px) { h2 { font-size: 2rem; } }
 
 
-section.text .container { max-width: 34rem; }
-section.text p > * { max-width: 100%; }
+.text .container { max-width: 34rem; }
+.text p > * { max-width: 100%; }
 
 p, li {
 	margin: 1rem 0;
@@ -267,6 +267,8 @@ p, li {
 }
 
 p + p { margin-top: 1.5em; }
+p + .form-group { margin-top: 1.5em; }
+.form-group { margin-bottom: 1.5em; }
 
 blockquote { position: relative; font-size: 1.2em; opacity: .95; }
 blockquote::after {
@@ -304,3 +306,14 @@ h1 + h2, h2 + h3, h3 + h4, h4 + h5, h5 + h6 { margin-top: 1em; }
 
 .fade-enter-active { transition: all .25s ease-out; }
 .fade-enter { transform: translateY(20px); opacity: .5; }
+
+
+.fullscreen {
+	width: 100vw; height: 100vh;
+	position: fixed; top: 0; left: 0;
+	background-color: rgba(255,255,255,.98);
+	z-index: 10;
+	overflow-y: scroll;
+}
+
+.fullscreen .container { padding-top: 7vh; padding-bottom: 20vh; }

@@ -9,9 +9,6 @@ requirejs([
 	'node_modules/airtable/build/airtable.browser.js',
 	], function(Vue, Vuex, VueResource, VueRouter, marked, Airtable) {
 
-	console.log(Vue)
-	console.log(marked)
-	console.log(Airtable)
 
 	Vue.use(Vuex)
 	Vue.use(VueResource)
@@ -43,7 +40,10 @@ requirejs([
 			},
 			'articles': placeholders.articles,
 			'pages': [],
-			'links': []
+			'links': [],
+			'onboarding': {
+				'active': false,
+			}
 		},
 		mutations: {
 			updateData(state, payload) {
@@ -170,6 +170,152 @@ requirejs([
 		}
 	})
 
+	Vue.component('departement-selector', {
+		template: `
+			<select>
+				<option value="" disabled selected>Choisir un département</option>
+				<option>2 - Aisne</option>
+				<option>3 - Allier</option>
+				<option>4 - Alpes-de-Haute-Provence</option>
+				<option>5 - Hautes-alpes</option>
+				<option>6 - Alpes-maritimes</option>
+				<option>7 - Ardèche</option>
+				<option>8 - Ardennes</option>
+				<option>9 - Ariège</option>
+				<option>10 - Aube</option>
+				<option>11 - Aude</option>
+				<option>12 - Aveyron</option>
+				<option>13 - Bouches-du-Rhône</option>
+				<option>14 - Calvados</option>
+				<option>15 - Cantal</option>
+				<option>16 - Charente</option>
+				<option>17 - Charente-maritime</option>
+				<option>18 - Cher</option>
+				<option>19 - Corrèze</option>
+				<option>2a - Corse-du-sud</option>
+				<option>2b - Haute-Corse</option>
+				<option>21 - Côte-d'Or</option>
+				<option>22 - Côtes-d'Armor</option>
+				<option>23 - Creuse</option>
+				<option>24 - Dordogne</option>
+				<option>25 - Doubs</option>
+				<option>26 - Drôme</option>
+				<option>27 - Eure</option>
+				<option>28 - Eure-et-loir</option>
+				<option>29 - Finistère</option>
+				<option>30 - Gard</option>
+				<option>31 - Haute-garonne</option>
+				<option>32 - Gers</option>
+				<option>33 - Gironde</option>
+				<option>34 - Hérault</option>
+				<option>35 - Ille-et-vilaine</option>
+				<option>36 - Indre</option>
+				<option>37 - Indre-et-loire</option>
+				<option>38 - Isère</option>
+				<option>39 - Jura</option>
+				<option>40 - Landes</option>
+				<option>41 - Loir-et-cher</option>
+				<option>42 - Loire</option>
+				<option>43 - Haute-loire</option>
+				<option>44 - Loire-atlantique</option>
+				<option>45 - Loiret</option>
+				<option>46 - Lot</option>
+				<option>47 - Lot-et-garonne</option>
+				<option>48 - Lozère</option>
+				<option>49 - Maine-et-loire</option>
+				<option>50 - Manche</option>
+				<option>51 - Marne</option>
+				<option>52 - Haute-marne</option>
+				<option>53 - Mayenne</option>
+				<option>54 - Meurthe-et-moselle</option>
+				<option>55 - Meuse</option>
+				<option>56 - Morbihan</option>
+				<option>57 - Moselle</option>
+				<option>58 - Nièvre</option>
+				<option>59 - Nord</option>
+				<option>60 - Oise</option>
+				<option>61 - Orne</option>
+				<option>62 - Pas-de-calais</option>
+				<option>63 - Puy-de-dôme</option>
+				<option>64 - Pyrénées-atlantiques</option>
+				<option>65 - Hautes-Pyrénées</option>
+				<option>66 - Pyrénées-orientales</option>
+				<option>67 - Bas-rhin</option>
+				<option>68 - Haut-rhin</option>
+				<option>69 - Rhône</option>
+				<option>70 - Haute-saône</option>
+				<option>71 - Saône-et-loire</option>
+				<option>72 - Sarthe</option>
+				<option>73 - Savoie</option>
+				<option>74 - Haute-savoie</option>
+				<option>75 - Paris</option>
+				<option>76 - Seine-maritime</option>
+				<option>77 - Seine-et-marne</option>
+				<option>78 - Yvelines</option>
+				<option>79 - Deux-sèvres</option>
+				<option>80 - Somme</option>
+				<option>81 - Tarn</option>
+				<option>82 - Tarn-et-garonne</option>
+				<option>83 - Var</option>
+				<option>84 - Vaucluse</option>
+				<option>85 - Vendée</option>
+				<option>86 - Vienne</option>
+				<option>87 - Haute-vienne</option>
+				<option>88 - Vosges</option>
+				<option>89 - Yonne</option>
+				<option>90 - Territoire de belfort</option>
+				<option>91 - Essonne</option>
+				<option>92 - Hauts-de-seine</option>
+				<option>93 - Seine-Saint-Denis</option>
+				<option>94 - Val-de-marne</option>
+				<option>95 - Val-d'oise</option>
+				<option>971 - Guadeloupe</option>
+				<option>972 - Martinique</option>
+				<option>973 - Guyane</option>
+				<option>974 - La réunion</option>
+				<option>976 - Mayotte</option>
+				<option>99 - Étranger</option>
+			</select>
+		`,
+	})
+
+
+
+	Vue.component('onboarding-modal', {
+		props: ['email', 'record'],
+		template: `
+			<div class="fullscreen text">
+				<div class="container">
+					<form>
+						<h2>Félicitations !</h2>
+						<p>Tu es désormais membre des Jeunes Démocrates !</p>
+						<p>Pour finaliser ton inscription, pourrais-tu compléter les champs suivants ?</p>
+						<div class="form-group">
+							<label>Quel est ton prénom ?</label>
+							<input class="form-control">
+						</div>
+						<div class="form-group">
+							<label>Quel est ton nom ?</label>
+							<input class="form-control">
+						</div>
+						<div class="form-group">
+							<label>Peux-tu nous confirmer ton adresse email ?</label>
+							<input type="email" :value="email" class="form-control">
+						</div>
+						<div class="form-group">
+							<label>Dans quel département habites-tu ?</label>
+							<departement-selector class="form-control"></department-selector>
+						</div>
+						<p>
+							<button class="btn btn-primary btn-block"><i class="fa fa-check"></i> Finaliser mon inscription</button>
+						</p>
+					</form>
+
+				</div>
+			</div>
+		`,
+	})
+
 	var Actus = {
 		template: `
 				<section>
@@ -251,7 +397,7 @@ requirejs([
 									<h3>Rejoins-nous !</h3>
 									<form id="signup_form" @submit.prevent="signup()">
 										<div class="input-group">
-											<input type="email" name="signup_email" placeholder="mon@adresse.mail" class="form-control">
+											<input id="signup_email" type="email" name="signup_email" placeholder="mon@adresse.mail" class="form-control">
 											<div class="input-group-append">
 												<button type="submit" class="btn btn-primary email-submit"><i class="fa fa-chevron-right"></i></button>
 											</div>
@@ -286,6 +432,12 @@ requirejs([
 					</div>
 				</footer>
 
+				<onboarding-modal
+					v-if="state.onboarding.active"
+					:email="state.onboarding.email"
+					:record="state.onboarding.record"
+				></onboarding-modal>
+
 			</div>
 	
 		`,
@@ -294,10 +446,17 @@ requirejs([
 		},
 		methods: {
 			signup: function() {
-				var $form = document.querySelector('#signup_form')
-				console.log(JSON.stringify($form))
-				var url = 'https://script.google.com/macros/s/AKfycbxKYWiaZmK0eL6OrBxaIhRxkv0NMivPMVralfvWEK1IvdgaIKK4/exec'
-				this.$http.post(url, JSON.stringify($form)).then(console.log('Sent!'))
+
+				var email = document.querySelector('#signup_email').value
+				var data = { "Email": email, }
+
+				Vue.http.post(_airTable.ListEndpoint('Inscriptions'), {'fields': data}).then((response) => {
+					console.log(response.body.id)
+					store.commit('updateData', {
+						'onboarding': { 'active': true, 'email': email, 'record': response.body.id },
+					})
+				})
+
 			}
 		}
 	})
@@ -334,13 +493,48 @@ requirejs([
 		store.commit('updateData', {'links': response.body.items})
 	})
 
-	var base = new Airtable({apiKey: 'keywLosZM2uL7iCRC'}).base('app2vJwzO7duiq30k');
-
-	base('Inscriptions').create({
-		"Email": "testing@tester.com",
-	}, function(err, record) {
-		if (err) { console.error(err); return; }
-		console.log(record.getId());
-	});
-
 })
+
+function airTable(apiKey, appKey) {
+
+	this.apiKey = apiKey
+	this.appKey = appKey
+
+	this.ListEndpoint = function (table, params) {
+		// e.g. : airTableListEndpoint('Newsletters', {'maxRecords': 1})
+		var paramString = ''
+		for (var param in params) {
+			paramString += '&' + param + '=' + params[param]
+		}
+		return 'https://api.airtable.com/v0/' + this.appKey + '/' + table + '?api_key=' + this.apiKey + paramString
+	}
+
+	this.ItemEndpoint = function (table, id) {
+		// e.g. : airTableItemEndpoint('Newsletters', 'recKbCev6uCTnLFdU')
+		return 'https://api.airtable.com/v0/' + this.appKey + '/' + table + '/' + id + '?api_key=' + this.apiKey
+	}
+
+	this.Clean = function (object) {
+		// AirTable objects have a "field" property which contains their actual data
+		// This is to clean up the airtable objects
+		try {
+			if (object.constructor === Array) {
+				for (i in object) {
+					var airTableId = object[i].id
+					object[i] = object[i].fields
+					object[i].airTableId = airTableId
+				} 
+			} else {
+				var airTableId = object.id
+				object = object.fields
+				object.airTableId = airTableId
+			}
+			return object
+		} catch (err) {
+			console.error(err.message)
+			return false
+		}
+	}
+}
+
+var _airTable = new airTable(apiKey='keywLosZM2uL7iCRC', appKey='app2vJwzO7duiq30k')
