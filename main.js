@@ -9,6 +9,7 @@ requirejs([
 	'node_modules/airtable/build/airtable.browser.js',
 	], function(Vue, Vuex, VueResource, VueRouter, marked, Airtable) {
 
+	window.Vue = Vue
 
 	Vue.use(Vuex)
 	Vue.use(VueResource)
@@ -42,8 +43,9 @@ requirejs([
 			'pages': [],
 			'links': [],
 			'onboarding': {
-				'active': false,
-			}
+				'status': 'inactive',
+			},
+			'loading': false,
 		},
 		mutations: {
 			updateData(state, payload) {
@@ -174,6 +176,7 @@ requirejs([
 		template: `
 			<select>
 				<option value="" disabled selected>Choisir un département</option>
+				<option>1 - Ain</option>
 				<option>2 - Aisne</option>
 				<option>3 - Allier</option>
 				<option>4 - Alpes-de-Haute-Provence</option>
@@ -282,32 +285,55 @@ requirejs([
 
 
 	Vue.component('onboarding-modal', {
-		props: ['email', 'record'],
+		props: ['onboard', 'email', 'record', 'loading'],
 		template: `
 			<div class="fullscreen text">
 				<div class="container">
-					<form>
+					<form @submit.prevent="onboard(record)">
 						<h2>Félicitations !</h2>
 						<p>Tu es désormais membre des Jeunes Démocrates !</p>
-						<p>Pour finaliser ton inscription, pourrais-tu compléter les champs suivants ?</p>
+						<p>Pour finaliser ton inscription, complètes les champs suivants !</p>
 						<div class="form-group">
-							<label>Quel est ton prénom ?</label>
-							<input class="form-control">
+							<label>Quel est ton <strong>prénom</strong> ?</label>
+							<input id="onboard__prenom" class="form-control">
 						</div>
 						<div class="form-group">
-							<label>Quel est ton nom ?</label>
-							<input class="form-control">
+							<label>Quel est ton <strong>nom</strong> ?</label>
+							<input id="onboard__nom" class="form-control">
 						</div>
 						<div class="form-group">
-							<label>Peux-tu nous confirmer ton adresse email ?</label>
-							<input type="email" :value="email" class="form-control">
+							<label>En quelle <strong>année</strong> es-tu né ?</label>
+							<input id="onboard__naissance" pattern="[0-9]{4}$" class="form-control">
 						</div>
 						<div class="form-group">
-							<label>Dans quel département habites-tu ?</label>
-							<departement-selector class="form-control"></department-selector>
+							<label><strong>Que fais-tu</strong>, dans la vie ?</label>
+							<input id="onboard__occupation" class="form-control">
+							<small class="text-muted form-text">Si tu es étudiant·e, dis-nous en quoi, c'est plus intéressant !</small>
+						</div>
+						<div class="form-group">
+							<label>Peux-tu nous confirmer ton <strong>adresse email</strong> ?</label>
+							<input id="onboard__email" type="email" :value="email" class="form-control">
+						</div>
+						<div class="form-group">
+							<label>As-tu un <strong>numéro de mobile</strong> ?</label>
+							<input id="onboard__tel" class="form-control">
+							<small class="text-muted form-text">Histoire qu'on puisse un peu papoter !</small>
+						</div>					
+						<div class="form-group">
+							<label>Dans quel <strong>département</strong> habites-tu ?</label>
+							<departement-selector id="onboard__departement" class="form-control"></departement-selector>
+							<small class="text-muted form-text">Parce que la politique, ça se joue au local !</small>
+						</div>
+						<div class="form-group">
+							<label>Dans quelle <strong>ville</strong> habites-tu ?</label>
+							<input id="onboard__ville" class="form-control">
 						</div>
 						<p>
-							<button class="btn btn-primary btn-block"><i class="fa fa-check"></i> Finaliser mon inscription</button>
+							<button class="btn btn-primary btn-block">
+								<i v-if="loading" class="fa fa-spin fa-circle-o-notch"></i>
+								<i v-else class="fa fa-check"></i>
+								Finaliser mon inscription
+							</button>
 						</p>
 					</form>
 
@@ -395,14 +421,21 @@ requirejs([
 								</div>
 								<div class="col-md-6 col-lg-5 offset-lg-1 header-item email-wrapper">
 									<h3>Rejoins-nous !</h3>
-									<form id="signup_form" @submit.prevent="signup()">
+									<form v-if="state.onboarding.status=='inactive'" id="signup_form" @submit.prevent="signup()">
 										<div class="input-group">
 											<input id="signup_email" type="email" name="signup_email" placeholder="mon@adresse.mail" class="form-control">
 											<div class="input-group-append">
-												<button type="submit" class="btn btn-primary email-submit"><i class="fa fa-chevron-right"></i></button>
+												<button type="submit" class="btn btn-primary email-submit">
+													<i v-if="state.loading" class="fa fa-spin fa-circle-o-notch"></i>
+													<i v-else class="fa fa-chevron-right"></i>
+												</button>
 											</div>
 										</div>
 									</form>
+									<div v-else class="alert alert-success" role="alert">
+										<i class="fa fa-check"></i>
+										Ton inscription a bien été enregistrée !
+									</div>
 								</div>
 							</div>
 						</div>
@@ -433,7 +466,9 @@ requirejs([
 				</footer>
 
 				<onboarding-modal
-					v-if="state.onboarding.active"
+					v-if="state.onboarding.status=='active'"
+					:onboard="onboard"
+					:loading="state.loading"
 					:email="state.onboarding.email"
 					:record="state.onboarding.record"
 				></onboarding-modal>
@@ -447,15 +482,50 @@ requirejs([
 		methods: {
 			signup: function() {
 
+				store.commit('updateData', { 'loading': true, })
+
 				var email = document.querySelector('#signup_email').value
 				var data = { "Email": email, }
 
 				Vue.http.post(_airTable.ListEndpoint('Inscriptions'), {'fields': data}).then((response) => {
-					console.log(response.body.id)
 					store.commit('updateData', {
-						'onboarding': { 'active': true, 'email': email, 'record': response.body.id },
+						'onboarding': { 'status': 'active', 'email': email, 'record': response.body.id },
+						'loading': false,
 					})
 				})
+
+			},
+			onboard: function(record) {
+
+				store.commit('updateData', { 'onboarding': { 'status': 'complete' }, 'loading': false, })
+
+				var prenom = document.querySelector('#onboard__prenom').value
+				var nom = document.querySelector('#onboard__nom').value
+				var naissance = document.querySelector('#onboard__naissance').value
+				var occupation = document.querySelector('#onboard__occupation').value
+
+				var email = document.querySelector('#onboard__email').value
+				var tel = document.querySelector('#onboard__tel').value
+
+				var departement = document.querySelector('#onboard__departement').value
+				var ville = document.querySelector('#onboard__ville').value
+
+				data = {
+					"Prénom": prenom,
+					"Nom": nom,
+					"Année de naissance": naissance,
+					"Occupation": occupation,
+					"Email": email,
+					"Mobile": tel,
+					"Département": departement,
+					"Ville": ville,
+				}
+
+				Vue.http.patch(_airTable.ItemEndpoint('Inscriptions', record), {'fields': data}).then((response) => {
+					console.log(response.body)
+					store.commit('updateData', { 'onboarding': { 'status': 'complete', 'loading': false, }, })
+				})
+
 
 			}
 		}
