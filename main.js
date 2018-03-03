@@ -536,9 +536,9 @@ requirejs([
 	// DATA FETCHING
 
 	function getThumbnail(article) {
-		var articleImages = article.description.match("https:\/\/cdn-images-1.medium.com\/max\/960\/([^.]*).(jpg|png|jpeg)")
+		var articleImages = article.description.match("https:\/\/cdn-images-1.medium.com\/max\/[0-9]*\/([^.]*).(jpg|png|jpeg)")
 		if (articleImages) {
-			var thumbnail = articleImages[0].replace("/960/", "/320/")
+			var thumbnail = articleImages[0].replace(/max\/[0-9]*/, "max/320")
 			return thumbnail
 		} else {
 			return "media/meeting.jpg"
