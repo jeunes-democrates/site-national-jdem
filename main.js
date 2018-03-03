@@ -287,58 +287,59 @@ requirejs([
 	Vue.component('onboarding-modal', {
 		props: ['onboard', 'email', 'record', 'loading'],
 		template: `
-			<div class="fullscreen text">
-				<div class="container">
-					<form @submit.prevent="onboard(record)">
-						<h2>Félicitations !</h2>
-						<p>Tu es désormais membre des Jeunes Démocrates !</p>
-						<p>Pour finaliser ton inscription, complètes les champs suivants !</p>
-						<div class="form-group">
-							<label>Quel est ton <strong>prénom</strong> ?</label>
-							<input id="onboard__prenom" class="form-control">
-						</div>
-						<div class="form-group">
-							<label>Quel est ton <strong>nom</strong> ?</label>
-							<input id="onboard__nom" class="form-control">
-						</div>
-						<div class="form-group">
-							<label>En quelle <strong>année</strong> es-tu né ?</label>
-							<input id="onboard__naissance" pattern="[0-9]{4}$" class="form-control">
-						</div>
-						<div class="form-group">
-							<label><strong>Que fais-tu</strong>, dans la vie ?</label>
-							<input id="onboard__occupation" class="form-control">
-							<small class="text-muted form-text">Si tu es étudiant·e, dis-nous en quoi, c'est plus intéressant !</small>
-						</div>
-						<div class="form-group">
-							<label>Peux-tu nous confirmer ton <strong>adresse email</strong> ?</label>
-							<input id="onboard__email" type="email" :value="email" class="form-control">
-						</div>
-						<div class="form-group">
-							<label>As-tu un <strong>numéro de mobile</strong> ?</label>
-							<input id="onboard__tel" class="form-control">
-							<small class="text-muted form-text">Histoire qu'on puisse un peu papoter !</small>
-						</div>					
-						<div class="form-group">
-							<label>Dans quel <strong>département</strong> habites-tu ?</label>
-							<departement-selector id="onboard__departement" class="form-control"></departement-selector>
-							<small class="text-muted form-text">Parce que la politique, ça se joue au local !</small>
-						</div>
-						<div class="form-group">
-							<label>Dans quelle <strong>ville</strong> habites-tu ?</label>
-							<input id="onboard__ville" class="form-control">
-						</div>
-						<p>
-							<button class="btn btn-primary btn-block">
-								<i v-if="loading" class="fa fa-spin fa-circle-o-notch"></i>
-								<i v-else class="fa fa-check"></i>
-								Finaliser mon inscription
-							</button>
-						</p>
-					</form>
+			<transition name="fade">
+				<div class="fullscreen text">
+					<div class="container">
+						<form @submit.prevent="onboard(record)">
+							<h2>Félicitations !</h2>
+							<p>Tu peux désormais finaliser ton inscription :</p>
+							<div class="form-group">
+								<label>Quel est ton <strong>prénom</strong> ?</label>
+								<input id="onboard__prenom" class="form-control">
+							</div>
+							<div class="form-group">
+								<label>Quel est ton <strong>nom</strong> ?</label>
+								<input id="onboard__nom" class="form-control">
+							</div>
+							<div class="form-group">
+								<label>Quelle est ton année de <strong>naissance</strong> ?</label>
+								<input id="onboard__naissance" pattern="[0-9]{4}$" class="form-control">
+							</div>
+							<div class="form-group">
+								<label><strong>Que fais-tu</strong>, dans la vie ?</label>
+								<input id="onboard__occupation" class="form-control">
+								<small class="text-muted form-text">Si tu es étudiant·e, dis-nous en quoi, c'est plus intéressant !</small>
+							</div>
+							<div class="form-group">
+								<label>Peux-tu nous confirmer ton <strong>adresse email</strong> ?</label>
+								<input id="onboard__email" type="email" :value="email" class="form-control">
+							</div>
+							<div class="form-group">
+								<label>As-tu un <strong>numéro de mobile</strong> ?</label>
+								<input id="onboard__tel" class="form-control">
+								<small class="text-muted form-text">Histoire qu'on puisse un peu papoter !</small>
+							</div>					
+							<div class="form-group">
+								<label>Dans quel <strong>département</strong> habites-tu ?</label>
+								<departement-selector id="onboard__departement" class="form-control"></departement-selector>
+								<small class="text-muted form-text">Parce que la politique, ça se joue au local !</small>
+							</div>
+							<div class="form-group">
+								<label>Dans quelle <strong>ville</strong> habites-tu ?</label>
+								<input id="onboard__ville" class="form-control">
+							</div>
+							<p>
+								<button id="endFormButton" class="btn btn-primary btn-block">
+									<i v-if="loading" class="fa fa-spin fa-circle-o-notch"></i>
+									<i v-else class="fa fa-check"></i>
+									Finaliser mon inscription
+								</button>
+							</p>
+						</form>
 
-				</div>
+					</div>
 			</div>
+		</transition>
 		`,
 	})
 
