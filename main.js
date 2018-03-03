@@ -545,7 +545,7 @@ requirejs([
 		}	
 	}
 
-	Vue.http.get("https://api.rss2json.com/v1/api.json?api_key=5ftufd58cwsriwlqozmec5fjliaa479brtt3dra6&rss_url=https%3A%2F%2Fmedium.com%2Ffeed%2F133b&count=6")
+	Vue.http.get("https://api.rss2json.com/v1/api.json?api_key=5ftufd58cwsriwlqozmec5fjliaa479brtt3dra6&rss_url=https%3A%2F%2Fmedium.com%2Ffeed%2F@JeunesDemocrates&count=6")
 	.then((response) => {
 		var actus = response.body.items
 		for (i in actus) {
